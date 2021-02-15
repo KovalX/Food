@@ -1810,137 +1810,179 @@ module.exports = g;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.replace.js */ "./node_modules/core-js/modules/es.string.replace.js");
-/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
+/* harmony import */ var _modules_cards__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/cards */ "./src/js/modules/cards.js");
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/timer */ "./src/js/modules/timer.js");
+/* harmony import */ var _modules_modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/modal */ "./src/js/modules/modal.js");
+/* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
+/* harmony import */ var _modules_slider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/slider */ "./src/js/modules/slider.js");
+/* harmony import */ var _modules_calc__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/calc */ "./src/js/modules/calc.js");
 
-// @import 'core-js';
-// const { data } = require('autoprefixer');
+
+
+
+
+
+
+
 window.addEventListener('DOMContentLoaded', function () {
-  // Tabs
-  let tabs = document.querySelectorAll('.tabheader__item'),
-      tabsContent = document.querySelectorAll('.tabcontent'),
-      tabsParent = document.querySelector('.tabheader__items');
+  const modalTimerId = setTimeout(() => Object(_modules_modal__WEBPACK_IMPORTED_MODULE_3__["openModal"])('.modal', modalTimerId), 300000);
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_0__["default"])('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
+  Object(_modules_cards__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  Object(_modules_timer__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  Object(_modules_modal__WEBPACK_IMPORTED_MODULE_3__["default"])('[data-modal]', '.modal', modalTimerId);
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_4__["default"])('form', modalTimerId);
+  Object(_modules_slider__WEBPACK_IMPORTED_MODULE_5__["default"])({
+    container: '.offer__slider',
+    nextArrow: '.offer__slider-next',
+    prevArrow: '.offer__slider-prev',
+    totalCounter: '#total',
+    currentCounter: '#current',
+    wrapper: '.offer__slider-wrapper',
+    field: '.offer__slider-inner',
+    slide: '.offer__slide'
+  });
+  Object(_modules_calc__WEBPACK_IMPORTED_MODULE_6__["default"])();
+});
 
-  function hideTabContent() {
-    tabsContent.forEach(item => {
-      item.classList.add('hide');
-      item.classList.remove('show', 'fade');
-    });
-    tabs.forEach(item => {
-      item.classList.remove('tabheader__item_active');
-    });
+/***/ }),
+
+/***/ "./src/js/modules/calc.js":
+/*!********************************!*\
+  !*** ./src/js/modules/calc.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function calc() {
+  const result = document.querySelector('.calculating__result span');
+  let sex, height, weight, age, ratio;
+
+  if (localStorage.getItem('sex')) {
+    sex = localStorage.getItem('sex');
+  } else {
+    sex = 'female';
+    localStorage.setItem('sex', 'female');
   }
 
-  function showTabContent(i = 0) {
-    tabsContent[i].classList.add('show', 'fade');
-    tabsContent[i].classList.remove('hide');
-    tabs[i].classList.add('tabheader__item_active');
+  if (localStorage.getItem('ratio')) {
+    ratio = localStorage.getItem('ratio');
+  } else {
+    ratio = 1.375;
+    localStorage.setItem('ratio', 1.375);
   }
 
-  hideTabContent();
-  showTabContent();
-  tabsParent.addEventListener('click', function (event) {
-    const target = event.target;
+  function initLocalSettings(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(elem => {
+      elem.classList.remove(activeClass);
 
-    if (target && target.classList.contains('tabheader__item')) {
-      tabs.forEach((item, i) => {
-        if (target == item) {
-          hideTabContent();
-          showTabContent(i);
-        }
-      });
-    }
-  }); // Timer
-
-  const deadline = '2021-03-01';
-
-  function getTimeRemaining(endtime) {
-    const t = Date.parse(endtime) - Date.parse(new Date()),
-          days = Math.floor(t / (1000 * 60 * 60 * 24)),
-          seconds = Math.floor(t / 1000 % 60),
-          minutes = Math.floor(t / 1000 / 60 % 60),
-          hours = Math.floor(t / (1000 * 60 * 60) % 24);
-    return {
-      'total': t,
-      'days': days,
-      'hours': hours,
-      'minutes': minutes,
-      'seconds': seconds
-    };
-  }
-
-  function getZero(num) {
-    if (num >= 0 && num < 10) {
-      return '0' + num;
-    } else {
-      return num;
-    }
-  }
-
-  function setClock(selector, endtime) {
-    const timer = document.querySelector(selector),
-          days = timer.querySelector("#days"),
-          hours = timer.querySelector('#hours'),
-          minutes = timer.querySelector('#minutes'),
-          seconds = timer.querySelector('#seconds'),
-          timeInterval = setInterval(updateClock, 1000);
-    updateClock();
-
-    function updateClock() {
-      const t = getTimeRemaining(endtime);
-      days.innerHTML = getZero(t.days);
-      hours.innerHTML = getZero(t.hours);
-      minutes.innerHTML = getZero(t.minutes);
-      seconds.innerHTML = getZero(t.seconds);
-
-      if (t.total <= 0) {
-        clearInterval(timeInterval);
+      if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+        elem.classList.add(activeClass);
       }
+
+      if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+        elem.classList.add(activeClass);
+      }
+    });
+  }
+
+  initLocalSettings('#gender div', 'calculating__choose-item_active');
+  initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
+
+  function calcTotal() {
+    if (!sex || !height || !weight || !age || !ratio) {
+      result.textContent = '____';
+      return;
+    }
+
+    if (sex == 'female') {
+      result.textContent = Math.round((447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio);
+      console.log(result);
+    } else {
+      result.textContent = Math.round((88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio);
     }
   }
 
-  setClock('.timer', deadline); // Modal
+  calcTotal();
 
-  const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal');
-  modalTrigger.forEach(btn => {
-    btn.addEventListener('click', openModal);
-  });
+  function getStaticInformation(selector, activeClass) {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(elem => {
+      elem.addEventListener('click', e => {
+        if (e.target.getAttribute('data-ratio')) {
+          ratio = +e.target.getAttribute('data-ratio');
+          localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
+        } else {
+          sex = e.target.getAttribute('id');
+          localStorage.setItem('sex', e.target.getAttribute('id'));
+        }
 
-  function closeModal() {
-    modal.classList.add('hide');
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
+        elements.forEach(elem => {
+          elem.classList.remove(activeClass);
+        });
+        e.target.classList.add(activeClass);
+        calcTotal();
+      });
+    });
   }
 
-  function openModal() {
-    modal.classList.add('show');
-    modal.classList.remove('hide');
-    document.body.style.overflow = 'hidden';
-    clearInterval(modalTimerId);
+  ;
+  getStaticInformation('#gender div', 'calculating__choose-item_active');
+  getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
+
+  function getDynamicInformation(selector) {
+    const input = document.querySelector(selector);
+    input.addEventListener('input', () => {
+      if (input.value.match(/\D/g)) {
+        input.style.border = '1px solid red';
+      } else {
+        input.style.border = 'none';
+      }
+
+      switch (input.getAttribute('id')) {
+        case 'height':
+          height = +input.value;
+          break;
+
+        case 'weight':
+          weight = +input.value;
+          break;
+
+        case 'age':
+          age = +input.value;
+          break;
+      }
+
+      calcTotal();
+    });
   }
 
-  modal.addEventListener('click', e => {
-    if (e.target === modal || e.target.getAttribute('data-close') == "") {
-      closeModal();
-    }
-  });
-  document.addEventListener('keydown', e => {
-    if (e.code === "Escape" && modal.classList.contains('show')) {
-      closeModal();
-    }
-  });
-  const modalTimerId = setTimeout(openModal, 300000); // Изменил значение, чтобы не отвлекало
+  getDynamicInformation('#height');
+  getDynamicInformation('#weight');
+  getDynamicInformation('#age');
+}
 
-  function showModalByScroll() {
-    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-      openModal();
-      window.removeEventListener('scroll', showModalByScroll);
-    }
-  }
+;
+/* harmony default export */ __webpack_exports__["default"] = (calc);
 
-  window.addEventListener('scroll', showModalByScroll); // Используем классы для создание карточек меню
+/***/ }),
 
+/***/ "./src/js/modules/cards.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/cards.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _services_services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/services */ "./src/js/services/services.js");
+
+
+function cards() {
   class MenuCard {
     constructor(src, alt, title, descr, price, parentSelector, ...classes) {
       this.src = src;
@@ -1983,17 +2025,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
   }
 
-  const getResource = async url => {
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-    }
-
-    return await res.json();
-  };
-
-  getResource('http://localhost:3000/menu').then(data => {
+  Object(_services_services__WEBPACK_IMPORTED_MODULE_0__["getResource"])('http://localhost:3000/menu').then(data => {
     data.forEach(({
       img,
       altimg,
@@ -2003,9 +2035,30 @@ window.addEventListener('DOMContentLoaded', function () {
     }) => {
       new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
     });
-  }); // Forms
+  });
+}
 
-  const forms = document.querySelectorAll('form');
+;
+/* harmony default export */ __webpack_exports__["default"] = (cards);
+
+/***/ }),
+
+/***/ "./src/js/modules/forms.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/forms.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modal */ "./src/js/modules/modal.js");
+/* harmony import */ var _services_services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/services */ "./src/js/services/services.js");
+
+
+
+function forms(formSelector, modalTimerId) {
+  const forms = document.querySelectorAll(formSelector);
   const message = {
     loading: 'img/form/spinner.svg',
     success: 'Спасибо! Скоро мы с вами свяжемся',
@@ -2014,17 +2067,6 @@ window.addEventListener('DOMContentLoaded', function () {
   forms.forEach(item => {
     bindPostData(item);
   });
-
-  const postData = async (url, data) => {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: data
-    });
-    return await res.json();
-  };
 
   function bindPostData(form) {
     form.addEventListener('submit', e => {
@@ -2042,7 +2084,7 @@ window.addEventListener('DOMContentLoaded', function () {
       formData.forEach(function (value, key) {
         object[key] = value;
       });
-      postData('http://localhost:3000/requests', json).then(data => {
+      Object(_services_services__WEBPACK_IMPORTED_MODULE_1__["postData"])('http://localhost:3000/requests', json).then(data => {
         console.log(data);
         showThanksModal(message.success);
         statusMessage.remove();
@@ -2057,7 +2099,7 @@ window.addEventListener('DOMContentLoaded', function () {
   function showThanksModal(message) {
     const prevModalDialog = document.querySelector('.modal__dialog');
     prevModalDialog.classList.add('hide');
-    openModal();
+    Object(_modal__WEBPACK_IMPORTED_MODULE_0__["openModal"])('.modal', modalTimerId);
     const thanksModal = document.createElement('div');
     thanksModal.classList.add('modal__dialog');
     thanksModal.innerHTML = `
@@ -2071,19 +2113,111 @@ window.addEventListener('DOMContentLoaded', function () {
       thanksModal.remove();
       prevModalDialog.classList.add('show');
       prevModalDialog.classList.remove('hide');
-      closeModal();
+      Object(_modal__WEBPACK_IMPORTED_MODULE_0__["closeModal"])('.modal');
     }, 4000);
-  } // Slider
+  }
+}
+
+;
+/* harmony default export */ __webpack_exports__["default"] = (forms);
+
+/***/ }),
+
+/***/ "./src/js/modules/modal.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/modal.js ***!
+  \*********************************/
+/*! exports provided: default, openModal, closeModal */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "openModal", function() { return openModal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "closeModal", function() { return closeModal; });
+function closeModal(modalSelector) {
+  const modal = document.querySelector(modalSelector);
+  modal.classList.add('hide');
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function openModal(modalSelector, modalTimerId) {
+  const modal = document.querySelector(modalSelector);
+  modal.classList.add('show');
+  modal.classList.remove('hide');
+  document.body.style.overflow = 'hidden';
+  console.log(modalTimerId);
+
+  if (modalTimerId) {
+    clearInterval(modalTimerId);
+  }
+}
+
+function modal(triggerSelector, modalSelector, modalTimerId) {
+  const modalTrigger = document.querySelectorAll(triggerSelector),
+        modal = document.querySelector(modalSelector);
+  modalTrigger.forEach(btn => {
+    btn.addEventListener('click', () => openModal(modalSelector, modalTimerId));
+  });
+  modal.addEventListener('click', e => {
+    if (e.target === modal || e.target.getAttribute('data-close') == "") {
+      closeModal(modalSelector);
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.code === "Escape" && modal.classList.contains('show')) {
+      closeModal(modalSelector);
+    }
+  });
+
+  function showModalByScroll() {
+    if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      openModal(modalSelector, modalTimerId);
+      window.removeEventListener('scroll', showModalByScroll);
+    }
+  }
+
+  window.addEventListener('scroll', showModalByScroll);
+}
+
+;
+/* harmony default export */ __webpack_exports__["default"] = (modal);
 
 
-  const slides = document.querySelectorAll('.offer__slide'),
-        slider = document.querySelector('.offer__slider'),
-        prev = document.querySelector('.offer__slider-prev'),
-        next = document.querySelector('.offer__slider-next'),
-        total = document.querySelector('#total'),
-        current = document.querySelector('#current'),
-        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelector('.offer__slider-inner'),
+
+/***/ }),
+
+/***/ "./src/js/modules/slider.js":
+/*!**********************************!*\
+  !*** ./src/js/modules/slider.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.replace.js */ "./node_modules/core-js/modules/es.string.replace.js");
+/* harmony import */ var core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace_js__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function slider({
+  container,
+  slide,
+  nextArrow,
+  prevArrow,
+  totalCounter,
+  currentCounter,
+  wrapper,
+  field
+}) {
+  const slides = document.querySelectorAll(slide),
+        slider = document.querySelector(container),
+        prev = document.querySelector(prevArrow),
+        next = document.querySelector(nextArrow),
+        total = document.querySelector(totalCounter),
+        current = document.querySelector(currentCounter),
+        slidesWrapper = document.querySelector(wrapper),
+        slidesField = document.querySelector(field),
         width = window.getComputedStyle(slidesWrapper).width;
   let slideIndex = 1;
   let offset = 0;
@@ -2216,115 +2350,164 @@ window.addEventListener('DOMContentLoaded', function () {
       dots.forEach(dot => dot.style.opacity = '.5');
       dots[slideIndex - 1].style.opacity = 1;
     });
-  }); // Calc
+  });
+}
 
-  const result = document.querySelector('.calculating__result span');
-  let sex, height, weight, age, ratio;
+;
+/* harmony default export */ __webpack_exports__["default"] = (slider);
 
-  if (localStorage.getItem('sex')) {
-    sex = localStorage.getItem('sex');
-  } else {
-    sex = 'female';
-    localStorage.setItem('sex', 'female');
-  }
+/***/ }),
 
-  if (localStorage.getItem('ratio')) {
-    ratio = localStorage.getItem('ratio');
-  } else {
-    ratio = 1.375;
-    localStorage.setItem('ratio', 1.375);
-  }
+/***/ "./src/js/modules/tabs.js":
+/*!********************************!*\
+  !*** ./src/js/modules/tabs.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-  function initLocalSettings(selector, activeClass) {
-    const elements = document.querySelectorAll(selector);
-    elements.forEach(elem => {
-      elem.classList.remove(activeClass);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
+  let tabs = document.querySelectorAll(tabsSelector),
+      tabsContent = document.querySelectorAll(tabsContentSelector),
+      tabsParent = document.querySelector(tabsParentSelector);
 
-      if (elem.getAttribute('id') === localStorage.getItem('sex')) {
-        elem.classList.add(activeClass);
-      }
-
-      if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
-        elem.classList.add(activeClass);
-      }
+  function hideTabContent() {
+    tabsContent.forEach(item => {
+      item.classList.add('hide');
+      item.classList.remove('show', 'fade');
+    });
+    tabs.forEach(item => {
+      item.classList.remove(activeClass);
     });
   }
 
-  initLocalSettings('#gender div', 'calculating__choose-item_active');
-  initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
-
-  function calcTotal() {
-    if (!sex || !height || !weight || !age || !ratio) {
-      result.textContent = '____';
-      return;
-    }
-
-    if (sex == 'female') {
-      result.textContent = Math.round((447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio);
-      console.log(result);
-    } else {
-      result.textContent = Math.round((88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio);
-    }
+  function showTabContent(i = 0) {
+    tabsContent[i].classList.add('show', 'fade');
+    tabsContent[i].classList.remove('hide');
+    tabs[i].classList.add(activeClass);
   }
 
-  calcTotal();
+  hideTabContent();
+  showTabContent();
+  tabsParent.addEventListener('click', function (event) {
+    const target = event.target;
 
-  function getStaticInformation(selector, activeClass) {
-    const elements = document.querySelectorAll(selector);
-    elements.forEach(elem => {
-      elem.addEventListener('click', e => {
-        if (e.target.getAttribute('data-ratio')) {
-          ratio = +e.target.getAttribute('data-ratio');
-          localStorage.setItem('ratio', +e.target.getAttribute('data-ratio'));
-        } else {
-          sex = e.target.getAttribute('id');
-          localStorage.setItem('sex', e.target.getAttribute('id'));
+    if (target && target.classList.contains('tabheader__item')) {
+      tabs.forEach((item, i) => {
+        if (target == item) {
+          hideTabContent();
+          showTabContent(i);
         }
-
-        elements.forEach(elem => {
-          elem.classList.remove(activeClass);
-        });
-        e.target.classList.add(activeClass);
-        calcTotal();
       });
-    });
+    }
+  });
+}
+
+;
+/* harmony default export */ __webpack_exports__["default"] = (tabs);
+
+/***/ }),
+
+/***/ "./src/js/modules/timer.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/timer.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function timer() {
+  const deadline = '2021-03-01';
+
+  function getTimeRemaining(endtime) {
+    const t = Date.parse(endtime) - Date.parse(new Date()),
+          days = Math.floor(t / (1000 * 60 * 60 * 24)),
+          seconds = Math.floor(t / 1000 % 60),
+          minutes = Math.floor(t / 1000 / 60 % 60),
+          hours = Math.floor(t / (1000 * 60 * 60) % 24);
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
   }
 
-  ;
-  getStaticInformation('#gender div', 'calculating__choose-item_active');
-  getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
-
-  function getDynamicInformation(selector) {
-    const input = document.querySelector(selector);
-    input.addEventListener('input', () => {
-      if (input.value.match(/\D/g)) {
-        input.style.border = '1px solid red';
-      } else {
-        input.style.border = 'none';
-      }
-
-      switch (input.getAttribute('id')) {
-        case 'height':
-          height = +input.value;
-          break;
-
-        case 'weight':
-          weight = +input.value;
-          break;
-
-        case 'age':
-          age = +input.value;
-          break;
-      }
-
-      calcTotal();
-    });
+  function getZero(num) {
+    if (num >= 0 && num < 10) {
+      return '0' + num;
+    } else {
+      return num;
+    }
   }
 
-  getDynamicInformation('#height');
-  getDynamicInformation('#weight');
-  getDynamicInformation('#age');
-});
+  function setClock(selector, endtime) {
+    const timer = document.querySelector(selector),
+          days = timer.querySelector("#days"),
+          hours = timer.querySelector('#hours'),
+          minutes = timer.querySelector('#minutes'),
+          seconds = timer.querySelector('#seconds'),
+          timeInterval = setInterval(updateClock, 1000);
+    updateClock();
+
+    function updateClock() {
+      const t = getTimeRemaining(endtime);
+      days.innerHTML = getZero(t.days);
+      hours.innerHTML = getZero(t.hours);
+      minutes.innerHTML = getZero(t.minutes);
+      seconds.innerHTML = getZero(t.seconds);
+
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+      }
+    }
+  }
+
+  setClock('.timer', deadline);
+}
+
+;
+/* harmony default export */ __webpack_exports__["default"] = (timer);
+
+/***/ }),
+
+/***/ "./src/js/services/services.js":
+/*!*************************************!*\
+  !*** ./src/js/services/services.js ***!
+  \*************************************/
+/*! exports provided: postData, getResource */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "postData", function() { return postData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getResource", function() { return getResource; });
+const postData = async (url, data) => {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: data
+  });
+  return await res.json();
+};
+
+const getResource = async url => {
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+  }
+
+  return await res.json();
+};
+
+
+
 
 /***/ })
 
